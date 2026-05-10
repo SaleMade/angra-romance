@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg:   #1A0F08;          /* base cocoa-dark, jamais preto puro */
+  --fg:   #F7F7F7;
+  --line: rgba(255, 255, 255, 0.12);
+  --warm: #D4A574;          /* caramelo (substitui o antigo neon azul) */
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-feature-settings: 'ss01', 'cv11', 'cv02';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #D4A574;
+  color: #1A0F08;
+}
+
+/* Foco visível para acessibilidade */
+:focus-visible {
+  outline: 1px solid #D4A574;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Esconder scrollbar (mantendo função) */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Marquee */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+/* Linha de divisão fina */
+.hairline {
+  border-color: var(--line);
+}
+
+/* Mask reveal — usado no hero */
+@keyframes mask-up {
+  0%   { transform: translateY(100%); }
+  100% { transform: translateY(0%); }
+}
+.mask-line {
+  display: block;
+  overflow: hidden;
+}
+.mask-line > span {
+  display: block;
+  animation: mask-up 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Pill button base */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+.pill-light {
+  background: #F7F7F7;
+  color: #0A0A0B;
+}
+.pill-light:hover {
+  background: #D4A574;
+}
+.pill-ghost {
+  background: transparent;
+  color: #F7F7F7;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.pill-ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Respeita reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
