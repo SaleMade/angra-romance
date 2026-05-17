@@ -39,7 +39,7 @@ export default function FAQ() {
             <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-ink-300">
               §06 · FAQ
             </div>
-            <h2 className="font-display tracking-tightest text-[14vw] lg:text-[6.5vw] leading-[0.92] font-medium">
+            <h2 className="font-display tracking-tightest text-[14vw] lg:text-[clamp(3rem,6.5vw,5.5rem)] leading-[0.92] font-medium">
               Perguntas.<br />
               <em className="italic font-light text-ink-100">Respostas francas.</em>
             </h2>

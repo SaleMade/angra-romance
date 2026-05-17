@@ -89,7 +89,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Title — mask reveal */}
-        <h1 className="font-display tracking-tightest text-[14vw] sm:text-[12vw] lg:text-[8.5vw] leading-[0.95] font-medium text-ink-50 max-w-[12ch]">
+        <h1 className="font-display tracking-tightest text-[14vw] sm:text-[12vw] lg:text-[clamp(4rem,8.5vw,8rem)] leading-[0.95] font-medium text-ink-50 max-w-[12ch]">
           <span className="mask-line">
             <motion.span {...reveal(0.3)} className="block">
               O destino

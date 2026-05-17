@@ -54,7 +54,7 @@ export default function Gallery() {
             <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-ink-300 mb-5">
               §03 · Galeria
             </div>
-            <h2 className="font-display tracking-tightest text-[14vw] lg:text-[7vw] leading-[0.9] font-medium">
+            <h2 className="font-display tracking-tightest text-[14vw] lg:text-[clamp(3rem,7vw,6rem)] leading-[0.9] font-medium">
               Angra<br />
               <em className="italic font-light text-ink-100">a dois.</em>
             </h2>
@@ -89,7 +89,7 @@ export default function Gallery() {
           {GALLERY.map((p, i) => (
             <figure
               key={i}
-              className="snap-start flex-shrink-0 w-[78vw] sm:w-[52vw] lg:w-[36vw] aspect-[4/5] relative overflow-hidden group rounded-2xl cursor-pointer"
+              className="snap-start flex-shrink-0 w-[78vw] sm:w-[52vw] lg:w-[34vw] lg:max-w-[460px] aspect-[4/5] relative overflow-hidden group rounded-2xl cursor-pointer"
             >
               <img
                 src={p.src}

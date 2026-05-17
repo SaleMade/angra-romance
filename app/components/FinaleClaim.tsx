@@ -47,7 +47,7 @@ export default function FinaleClaim() {
           <div className="font-mono text-[10px] tracking-[0.3em] uppercase text-gold mb-6">
             ★ O Encerramento
           </div>
-          <h2 className="font-display tracking-tightest text-[14vw] sm:text-[12vw] lg:text-[8vw] leading-[0.92] font-medium text-ink-50 mb-10">
+          <h2 className="font-display tracking-tightest text-[14vw] sm:text-[12vw] lg:text-[clamp(3.5rem,8vw,7rem)] leading-[0.92] font-medium text-ink-50 mb-10">
             Algumas viagens<br />
             <span className="italic font-light text-ink-100">
               são para sempre.

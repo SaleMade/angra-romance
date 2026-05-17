@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Plus, MapPin, ChevronRight } from 'lucide-react';
+import { Plus, MapPin, ChevronRight, ChevronLeft } from 'lucide-react';
 import { POINTS } from '@/lib/data';
 
 export default function Compass() {
@@ -19,6 +19,8 @@ export default function Compass() {
   }, [auto]);
 
   const select = (i: number) => { setAuto(false); setActive(i); };
+  const prev   = () => { setAuto(false); setActive((i) => (i - 1 + POINTS.length) % POINTS.length); };
+  const next   = () => { setAuto(false); setActive((i) => (i + 1) % POINTS.length); };
   const rotation = -point.angle;
 
   return (
@@ -56,7 +58,7 @@ export default function Compass() {
           <div className="lg:col-span-2 font-mono text-[10px] tracking-[0.25em] uppercase text-ink-200">
             §02 · O Roteiro
           </div>
-          <h2 className="lg:col-span-7 font-display tracking-tightest text-[12vw] lg:text-[6.5vw] leading-[0.92] font-medium max-w-[14ch] text-ink-50">
+          <h2 className="lg:col-span-7 font-display tracking-tightest text-[12vw] lg:text-[clamp(3rem,6.5vw,5.5rem)] leading-[0.92] font-medium max-w-[14ch] text-ink-50">
             Cinco capítulos.<br />
             <span className="italic font-light text-ink-100">Uma trajetória.</span>
           </h2>
@@ -71,9 +73,9 @@ export default function Compass() {
       <div className="relative max-w-[1500px] mx-auto px-6 lg:px-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
-          {/* COLUNA 1: BÚSSOLA ROTATIVA — no mobile envolve a foto, no desktop fica decorativa ao lado */}
-          <div className="lg:col-span-3 order-1 lg:order-1 flex flex-col items-center lg:items-start">
-            <div className="relative aspect-square w-full max-w-[420px] lg:max-w-[300px] mx-auto lg:mx-0">
+          {/* COLUNA 1: BÚSSOLA UNIFICADA — foto sempre dentro do círculo rotativo (mobile + desktop) */}
+          <div className="lg:col-span-7 order-1 lg:order-1 flex flex-col items-center lg:items-center">
+            <div className="relative aspect-square w-full max-w-[500px] lg:max-w-[680px] mx-auto">
               {/* Anéis decorativos */}
               <div className="absolute inset-0  rounded-full border hairline" />
               <div className="absolute inset-4  rounded-full border hairline" />
@@ -85,11 +87,8 @@ export default function Compass() {
               <span className="absolute bottom-1 left-1/2 -translate-x-1/2 font-mono text-[9px] tracking-[0.2em] text-ink-300">S</span>
               <span className="absolute left-1 top-1/2 -translate-y-1/2 font-mono text-[9px] tracking-[0.2em] text-ink-300">W</span>
 
-              {/* Ponteiro fixo — apenas no desktop (onde o centro está livre) */}
-              <div className="hidden lg:block pointer-events-none absolute top-[6%] left-1/2 -translate-x-1/2 w-px h-[44%] bg-gradient-to-t from-warm/0 via-warm/40 to-warm" />
-              <div className="hidden lg:block pointer-events-none absolute top-[4%] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-warm shadow-[0_0_14px_3px_rgba(212,165,116,0.6)]" />
-              {/* Mobile: indicador minimalista do ponto ativo (acima da foto) */}
-              <div className="lg:hidden pointer-events-none absolute top-[2%] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-warm shadow-[0_0_14px_3px_rgba(212,165,116,0.6)] z-20" />
+              {/* Indicador do ponto ativo no topo da bússola */}
+              <div className="pointer-events-none absolute top-[2%] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-warm shadow-[0_0_14px_3px_rgba(212,165,116,0.6)] z-20" />
 
               {/* Disco rotativo com os 5 pontos */}
               <motion.div
@@ -124,9 +123,8 @@ export default function Compass() {
                 })}
               </motion.div>
 
-              {/* Centro: NO MOBILE foto preenche; NO DESKTOP hub com + */}
-              {/* Mobile only: foto dentro do círculo da bússola */}
-              <div className="lg:hidden absolute inset-[14%] rounded-full overflow-hidden bg-ink-800">
+              {/* Foto sempre dentro do círculo da bússola (mobile + desktop) — mais protagonista */}
+              <div className="absolute inset-[10%] rounded-full overflow-hidden bg-ink-800">
                 <AnimatePresence>
                   <motion.img
                     key={point.id}
@@ -142,71 +140,8 @@ export default function Compass() {
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#1A0F08]/25 via-transparent to-transparent" />
               </div>
 
-              {/* Desktop only: hub central com + */}
-              <div className="hidden lg:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#1A0F08] border hairline items-center justify-center z-20">
-                <Plus className="w-4 h-4 text-warm" />
-              </div>
-            </div>
-
-            {/* Badge no mobile abaixo da bússola+foto (estilo pin do desktop) */}
-            <div className="lg:hidden mt-6 text-center">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={point.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.5 }}
-                  className="font-mono text-[10px] tracking-[0.25em] uppercase text-warm"
-                >
-                  {point.badge}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Pequena label decorativa abaixo da bússola (apenas desktop) */}
-            <div className="hidden lg:block mt-6 font-mono text-[9px] tracking-[0.3em] uppercase text-ink-300">
-              ★ Rota Privativa
-            </div>
-          </div>
-
-          {/* COLUNA 2: FOTO CENTRAL EM CÍRCULO — apenas no desktop (no mobile já está dentro da bússola) */}
-          <div className="hidden lg:block lg:col-span-5 order-1 lg:order-2 relative">
-            <div className="relative aspect-square w-full max-w-[520px] mx-auto">
-              {/* Anel pontilhado externo */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <circle
-                  cx="50" cy="50" r="49.4"
-                  fill="none"
-                  stroke="rgba(212,165,116,0.45)"
-                  strokeWidth="0.18"
-                  strokeDasharray="0.4 1.2"
-                />
-              </svg>
-
-              {/* Foto dentro do círculo */}
-              <div className="absolute inset-3 rounded-full overflow-hidden bg-ink-800">
-                <AnimatePresence>
-                  <motion.img
-                    key={point.id}
-                    src={point.image}
-                    alt={point.name}
-                    initial={{ opacity: 0, scale: 1.08 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </AnimatePresence>
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#1A0F08]/30 via-transparent to-transparent" />
-              </div>
-
-              {/* Pin label estilo Teresa Pérez — apenas em telas grandes pra não overflow no mobile */}
-              <div className="hidden lg:flex absolute bottom-[8%] right-[-12%] items-start gap-2 text-ink-50">
+              {/* Pin label estilo Teresa Pérez (somente desktop, posicionado fora do círculo à direita) */}
+              <div className="hidden lg:flex absolute bottom-[8%] right-[-14%] items-start gap-2 text-ink-50 z-30">
                 <svg className="w-px h-10 mt-1 overflow-visible" preserveAspectRatio="none">
                   <line x1="0" y1="0" x2="0" y2="40" stroke="rgba(212,165,116,0.5)" strokeWidth="1" strokeDasharray="2 3" />
                 </svg>
@@ -230,10 +165,75 @@ export default function Compass() {
                 </div>
               </div>
             </div>
+
+            {/* Mobile: navegação completa (badge + nome + setas + dots) abaixo da bússola */}
+            <div className="lg:hidden mt-8 w-full max-w-[440px] mx-auto">
+              {/* Badge + nome do ponto ativo (anima na troca) */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={point.id}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-center mb-5"
+                >
+                  <div className="font-mono text-[10px] tracking-[0.25em] uppercase text-warm mb-2">
+                    {point.badge}
+                  </div>
+                  <div className="font-display text-2xl tracking-tightest font-medium text-ink-50">
+                    {point.name}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Linha de navegação: ← [dots clicáveis] → */}
+              <div className="flex items-center justify-center gap-3">
+                <button
+                  onClick={prev}
+                  aria-label="Capítulo anterior"
+                  className="w-11 h-11 rounded-full border hairline flex items-center justify-center text-ink-100 hover:border-warm hover:text-warm transition-all active:scale-95"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
+                <div className="flex gap-2 items-center px-2">
+                  {POINTS.map((p, i) => {
+                    const isActive = i === active;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => select(i)}
+                        aria-label={p.name}
+                        className={
+                          'rounded-full transition-all duration-500 ease-expo-out ' +
+                          (isActive
+                            ? 'w-8 h-2 bg-warm shadow-[0_0_12px_2px_rgba(212,165,116,0.4)]'
+                            : 'w-2 h-2 bg-ink-400 hover:bg-ink-200')
+                        }
+                      />
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={next}
+                  aria-label="Próximo capítulo"
+                  className="w-11 h-11 rounded-full border hairline flex items-center justify-center text-ink-100 hover:border-warm hover:text-warm transition-all active:scale-95"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Pequena label decorativa abaixo da bússola (apenas desktop) */}
+            <div className="hidden lg:block mt-6 font-mono text-[9px] tracking-[0.3em] uppercase text-ink-300">
+              ★ Rota Privativa
+            </div>
           </div>
 
-          {/* COLUNA 3 (lg:col-span-4): TEXTO + LISTA */}
-          <div className="lg:col-span-4 order-3 relative">
+          {/* COLUNA 2: TEXTO + LISTA (era 3 antes, agora é 2 já que a foto foi pra dentro da bússola) */}
+          <div className="lg:col-span-5 order-3 lg:order-2 relative">
             <AnimatePresence mode="wait">
               <motion.article
                 key={point.id}

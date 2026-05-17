@@ -31,7 +31,7 @@ export default function EditorialOffer() {
           <div className="lg:col-span-2 font-mono text-[10px] tracking-[0.25em] uppercase text-ink-300">
             §05 · A Oferta
           </div>
-          <h2 className="lg:col-span-7 font-display tracking-tightest text-[12vw] lg:text-[7vw] leading-[0.9] font-medium">
+          <h2 className="lg:col-span-7 font-display tracking-tightest text-[12vw] lg:text-[clamp(3rem,7vw,6rem)] leading-[0.9] font-medium">
             Dia dos Namorados.<br />
             <span className="italic font-light text-ink-100">Edição limitada.</span>
           </h2>

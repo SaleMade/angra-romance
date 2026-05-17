@@ -43,7 +43,7 @@ export default function GrandFinale() {
           <div className="lg:col-span-2 font-mono text-[10px] tracking-[0.25em] uppercase text-ink-300">
             §04 · Grand Finale
           </div>
-          <h2 className="lg:col-span-7 font-display tracking-tightest text-[12vw] lg:text-[7vw] leading-[0.9] font-medium">
+          <h2 className="lg:col-span-7 font-display tracking-tightest text-[12vw] lg:text-[clamp(3rem,7vw,6rem)] leading-[0.9] font-medium">
             Um banquete<br />
             <span className="italic font-light text-ink-100">à beira-mar.</span>
           </h2>
