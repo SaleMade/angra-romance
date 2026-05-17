@@ -23,6 +23,10 @@ export default function Compass() {
   const next   = () => { setAuto(false); setActive((i) => (i + 1) % POINTS.length); };
   const rotation = -point.angle;
 
+  // Capítulos anterior e próximo (pra bússolas decorativas laterais)
+  const prevPoint = POINTS[(active - 1 + POINTS.length) % POINTS.length];
+  const nextPoint = POINTS[(active + 1) % POINTS.length];
+
   return (
     <section
       id="bussola"
@@ -50,6 +54,58 @@ export default function Compass() {
         {/* Overlay marrom mais leve — a foto aparece atrás */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#2A1810]/55 via-[#1A0F08]/45 to-[#2A1810]/65" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_20%,_rgba(26,15,8,0.55)_85%)]" />
+      </div>
+
+      {/* === BÚSSOLA LATERAL GRANDE — só no desktop, metade fora da tela à esquerda
+          Mostra o capítulo ANTERIOR. Gira em sincronia com a bússola principal. === */}
+      <div className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-0">
+        <div className="relative aspect-square w-[860px] opacity-50">
+          {/* Anéis decorativos */}
+          <div className="absolute inset-0  rounded-full border hairline" />
+          <div className="absolute inset-6  rounded-full border hairline" />
+          <div className="absolute inset-12 rounded-full border hairline" />
+
+          {/* Disco com pontos rotativos — gira em sincronia com a bússola principal */}
+          <motion.div
+            animate={{ rotate: rotation }}
+            transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute inset-0"
+          >
+            {POINTS.map((p) => (
+              <div
+                key={p.id}
+                className="absolute inset-0"
+                style={{ transform: `rotate(${p.angle}deg)` }}
+              >
+                <span className="absolute top-[3%] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-ink-400" />
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Foto do capítulo anterior (cross-fade ao trocar) */}
+          <div className="absolute inset-[10%] rounded-full overflow-hidden bg-ink-800">
+            <AnimatePresence>
+              <motion.img
+                key={prevPoint.id}
+                src={prevPoint.image}
+                alt=""
+                aria-hidden
+                initial={{ opacity: 0, scale: 1.08 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </AnimatePresence>
+            {/* Camada sutil pra escurecer a foto vizinha e dar profundidade */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1A0F08]/40 via-transparent to-[#1A0F08]/10" />
+          </div>
+
+          {/* Label decorativa minúscula */}
+          <div className="absolute bottom-[14%] right-[20%] font-mono text-[9px] tracking-[0.25em] uppercase text-ink-300">
+            ← Cap. anterior
+          </div>
+        </div>
       </div>
 
       {/* === HEADER COM TÍTULO GRANDE === */}

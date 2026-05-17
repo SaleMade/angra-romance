@@ -62,7 +62,8 @@ export default function GrandFinale() {
 
           {/* Coluna foto-carrossel (lg:col-span-7) */}
           <div className="lg:col-span-7 relative">
-            <div className="aspect-[4/3] lg:aspect-[5/6] relative overflow-hidden bg-ink-800 rounded-2xl">
+            <div className="lg:max-w-[580px]">
+            <div className="aspect-[4/3] lg:aspect-[4/5] relative overflow-hidden bg-ink-800 rounded-2xl">
               <AnimatePresence mode="sync">
                 <motion.img
                   key={slide.image}
@@ -122,6 +123,7 @@ export default function GrandFinale() {
                 );
               })}
             </div>
+            </div>{/* end max-w wrapper */}
           </div>
 
           {/* Coluna conteúdo (lg:col-span-5) */}
