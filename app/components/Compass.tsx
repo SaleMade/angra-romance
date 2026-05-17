@@ -56,58 +56,6 @@ export default function Compass() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_transparent_20%,_rgba(26,15,8,0.55)_85%)]" />
       </div>
 
-      {/* === BÚSSOLA LATERAL GRANDE — só no desktop, metade fora da tela à esquerda
-          Mostra o capítulo ANTERIOR. Gira em sincronia com a bússola principal. === */}
-      <div className="hidden lg:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none z-0">
-        <div className="relative aspect-square w-[860px] opacity-50">
-          {/* Anéis decorativos */}
-          <div className="absolute inset-0  rounded-full border hairline" />
-          <div className="absolute inset-6  rounded-full border hairline" />
-          <div className="absolute inset-12 rounded-full border hairline" />
-
-          {/* Disco com pontos rotativos — gira em sincronia com a bússola principal */}
-          <motion.div
-            animate={{ rotate: rotation }}
-            transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute inset-0"
-          >
-            {POINTS.map((p) => (
-              <div
-                key={p.id}
-                className="absolute inset-0"
-                style={{ transform: `rotate(${p.angle}deg)` }}
-              >
-                <span className="absolute top-[3%] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-ink-400" />
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Foto do capítulo anterior (cross-fade ao trocar) */}
-          <div className="absolute inset-[10%] rounded-full overflow-hidden bg-ink-800">
-            <AnimatePresence>
-              <motion.img
-                key={prevPoint.id}
-                src={prevPoint.image}
-                alt=""
-                aria-hidden
-                initial={{ opacity: 0, scale: 1.08 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </AnimatePresence>
-            {/* Camada sutil pra escurecer a foto vizinha e dar profundidade */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1A0F08]/40 via-transparent to-[#1A0F08]/10" />
-          </div>
-
-          {/* Label decorativa minúscula */}
-          <div className="absolute bottom-[14%] right-[20%] font-mono text-[9px] tracking-[0.25em] uppercase text-ink-300">
-            ← Cap. anterior
-          </div>
-        </div>
-      </div>
-
       {/* === HEADER COM TÍTULO GRANDE === */}
       <div className="relative max-w-[1500px] mx-auto px-6 lg:px-10 mb-16 lg:mb-24">
         <div className="grid lg:grid-cols-12 gap-8 items-end">
@@ -129,8 +77,52 @@ export default function Compass() {
       <div className="relative max-w-[1500px] mx-auto px-6 lg:px-10">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
 
-          {/* COLUNA 1: BÚSSOLA UNIFICADA — foto sempre dentro do círculo rotativo (mobile + desktop) */}
-          <div className="lg:col-span-7 order-1 lg:order-1 flex flex-col items-center lg:items-center">
+          {/* COLUNA 1: NEXT acima + BÚSSOLA (só linhas) + PREV abaixo */}
+          <div className="lg:col-span-7 order-1 lg:order-1 flex flex-col items-center lg:items-stretch">
+
+            {/* Bolinha NEXT — desktop only, alinhada à DIREITA (acima da bússola) */}
+            <button
+              onClick={next}
+              aria-label={`Próximo capítulo: ${nextPoint.name}`}
+              className="hidden lg:flex self-end w-[180px] -mb-44 group flex-col items-center gap-2 relative z-30"
+            >
+              <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-ink-300 group-hover:text-warm transition-colors">
+                Próximo →
+              </div>
+              <div className="relative w-[120px] h-[120px]">
+                <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(212,165,116,0.5)" strokeWidth="0.3" strokeDasharray="0.5 1.4" />
+                </svg>
+                <div className="absolute inset-1 rounded-full overflow-hidden bg-ink-800">
+                  <AnimatePresence>
+                    <motion.img
+                      key={nextPoint.id}
+                      src={nextPoint.image}
+                      alt={nextPoint.name}
+                      initial={{ opacity: 0, scale: 1.1 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.9 }}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#1A0F08]/30 via-transparent to-transparent" />
+                </div>
+              </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={nextPoint.id}
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.4 }}
+                  className="text-center"
+                >
+                  <div className="font-mono text-[9px] tracking-[0.25em] uppercase text-warm">{nextPoint.badge}</div>
+                  <div className="text-sm tracking-tight text-ink-100 mt-1">{nextPoint.name}</div>
+                </motion.div>
+              </AnimatePresence>
+            </button>
             <div className="relative aspect-square w-full max-w-[500px] lg:max-w-[680px] mx-auto">
               {/* Anéis decorativos */}
               <div className="absolute inset-0  rounded-full border hairline" />
@@ -179,7 +171,7 @@ export default function Compass() {
                 })}
               </motion.div>
 
-              {/* Foto sempre dentro do círculo da bússola (mobile + desktop) — mais protagonista */}
+              {/* Foto do capítulo ativo dentro do círculo da bússola */}
               <div className="absolute inset-[10%] rounded-full overflow-hidden bg-ink-800">
                 <AnimatePresence>
                   <motion.img
@@ -195,32 +187,51 @@ export default function Compass() {
                 </AnimatePresence>
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#1A0F08]/25 via-transparent to-transparent" />
               </div>
+            </div>
 
-              {/* Pin label estilo Teresa Pérez (somente desktop, posicionado fora do círculo à direita) */}
-              <div className="hidden lg:flex absolute bottom-[8%] right-[-14%] items-start gap-2 text-ink-50 z-30">
-                <svg className="w-px h-10 mt-1 overflow-visible" preserveAspectRatio="none">
-                  <line x1="0" y1="0" x2="0" y2="40" stroke="rgba(212,165,116,0.5)" strokeWidth="1" strokeDasharray="2 3" />
+            {/* Bolinha PREV — desktop only, alinhada à ESQUERDA (abaixo da bússola) */}
+            <button
+              onClick={prev}
+              aria-label={`Capítulo anterior: ${prevPoint.name}`}
+              className="hidden lg:flex self-start w-[180px] -mt-44 group flex-col items-center gap-2 relative z-30"
+            >
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={prevPoint.id}
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.4 }}
+                  className="text-center"
+                >
+                  <div className="font-mono text-[9px] tracking-[0.25em] uppercase text-warm">{prevPoint.badge}</div>
+                  <div className="text-sm tracking-tight text-ink-100 mt-1">{prevPoint.name}</div>
+                </motion.div>
+              </AnimatePresence>
+              <div className="relative w-[120px] h-[120px]">
+                <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(212,165,116,0.5)" strokeWidth="0.3" strokeDasharray="0.5 1.4" />
                 </svg>
-                <div>
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={point.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 8 }}
-                      transition={{ duration: 0.5 }}
-                      className="flex items-start gap-1.5"
-                    >
-                      <MapPin className="w-4 h-4 mt-1 text-warm flex-shrink-0" />
-                      <div>
-                        <div className="text-base lg:text-lg tracking-tight font-medium whitespace-nowrap">{point.name}</div>
-                        <div className="font-mono text-[9px] tracking-[0.25em] uppercase text-ink-300">{point.badge}</div>
-                      </div>
-                    </motion.div>
+                <div className="absolute inset-1 rounded-full overflow-hidden bg-ink-800">
+                  <AnimatePresence>
+                    <motion.img
+                      key={prevPoint.id}
+                      src={prevPoint.image}
+                      alt={prevPoint.name}
+                      initial={{ opacity: 0, scale: 1.1 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.9 }}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
                   </AnimatePresence>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-[#1A0F08]/30 via-transparent to-transparent" />
                 </div>
               </div>
-            </div>
+              <div className="font-mono text-[9px] tracking-[0.3em] uppercase text-ink-300 group-hover:text-warm transition-colors">
+                ← Anterior
+              </div>
+            </button>
 
             {/* Mobile: navegação completa (badge + nome + setas + dots) abaixo da bússola */}
             <div className="lg:hidden mt-8 w-full max-w-[440px] mx-auto">
